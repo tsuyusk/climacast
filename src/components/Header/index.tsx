@@ -1,4 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  FormEvent,
+  useState,
+  useEffect,
+  useCallback,
+  useRef
+} from "react";
 import * as Icon from "react-icons/fi";
 import * as S from "./styles";
 
@@ -11,17 +17,30 @@ const Header: React.FC<HeaderProps> = ({
   defaultInputValue = "",
   onChangeInput
 }) => {
+  const timeoutRef = useRef<number>();
+
   const [inputValue, setInputValue] = useState(defaultInputValue);
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
+    timeoutRef.current = setTimeout(() => {
       onChangeInput(inputValue);
     }, 1000);
 
     return () => {
-      clearTimeout(timeout);
+      clearTimeout(timeoutRef.current);
     };
   }, [inputValue, onChangeInput]);
+
+  const handleSubmit = useCallback(
+    (event: FormEvent) => {
+      event.preventDefault();
+
+      clearTimeout(timeoutRef.current);
+
+      onChangeInput(inputValue);
+    },
+    [inputValue, onChangeInput]
+  );
 
   return (
     <S.Header>
@@ -33,15 +52,18 @@ const Header: React.FC<HeaderProps> = ({
           </a>
         </S.LogoWrapper>
 
-        <S.SearchContainer>
-          <input
-            onChange={(e) => setInputValue(e.target.value)}
-            value={inputValue}
-          />
+        <S.SearchContainer htmlFor="header-input">
+          <form onSubmit={handleSubmit}>
+            <input
+              id="header-input"
+              onChange={(e) => setInputValue(e.target.value)}
+              value={inputValue}
+            />
 
-          <button>
-            <Icon.FiSearch size={24} />
-          </button>
+            <button type="submit">
+              <Icon.FiSearch size={24} />
+            </button>
+          </form>
         </S.SearchContainer>
       </div>
     </S.Header>

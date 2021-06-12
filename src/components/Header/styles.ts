@@ -17,6 +17,12 @@ export const Header = styled.header`
     max-width: 1120px;
   }
 
+  @media (max-width: 768px) {
+    > div {
+      max-width: 704px;
+    }
+  }
+
   @media (max-width: 360px) {
     > div {
       max-width: 288px;
@@ -52,7 +58,7 @@ export const LogoWrapper = styled.div`
   }
 `;
 
-export const SearchContainer = styled.div`
+export const SearchContainer = styled.label`
   position: relative;
 
   display: flex;
@@ -68,27 +74,33 @@ export const SearchContainer = styled.div`
   background: #f5f5f5;
   border-radius: 12px;
 
-  > input {
-    border: 0;
-    outline: 0;
-    background: transparent;
-    z-index: 1;
+  > form {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-    color: #333;
-    transition: color 0.2s ease;
-    font-family: "Montserrat";
-    font-size: 16px;
-    width: 80%;
-  }
+    > input {
+      border: 0;
+      outline: 0;
+      background: transparent;
+      z-index: 1;
 
-  > button {
-    border: 0;
-    background: transparent;
-    cursor: pointer;
-    z-index: 1;
-
-    > svg {
       color: #333;
+      transition: color 0.2s ease;
+      font-family: "Montserrat";
+      font-size: 16px;
+      width: 80%;
+    }
+
+    > button {
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      z-index: 1;
+
+      > svg {
+        color: #333;
+      }
     }
   }
 
@@ -98,27 +110,29 @@ export const SearchContainer = styled.div`
     position: absolute;
     height: 40px;
     width: 100%;
-    top: 0;
-    left: -100%;
-    transition: left 0.2s ease;
+    top: 110%;
+    left: 0;
+    transition: top 0.2s ease;
     background: #333;
     pointer-events: none;
   }
 
   &:hover,
   &:focus-within {
-    > input {
-      color: #f5f5f5;
-    }
-
-    > button {
-      > svg {
+    > form {
+      > input {
         color: #f5f5f5;
+      }
+
+      > button {
+        > svg {
+          color: #f5f5f5;
+        }
       }
     }
 
     &::after {
-      left: 0%;
+      top: 0%;
     }
   }
 
