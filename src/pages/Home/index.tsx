@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import Loader from "react-spinners/BounceLoader";
 import * as Icon from "react-icons/fi";
 
+import Header from "../../components/Header";
 import useFetch from "../../hooks/useFetch";
 import * as S from "./styles";
 
@@ -29,7 +30,7 @@ const weatherIcons = {
 };
 
 const Home: React.FC = () => {
-  const [inputValue, setInputValue] = useState("Belo Horizonte");
+  const [inputValue, setInputValue] = useState("Winnipeg");
 
   const { data, error, isLoading } = useFetch<WeatherAPIResponse>(
     `weather?q=${inputValue}`
@@ -43,6 +44,7 @@ const Home: React.FC = () => {
     return {
       ...data,
       main: {
+        ...data.main,
         temp: Math.floor(data.main.temp)
       }
     } as WeatherAPIResponse;
@@ -51,31 +53,15 @@ const Home: React.FC = () => {
   const airQuality = useMemo(() => {
     if (!data) return "";
 
-    return data.main.humidity > 70 ? "Good" : "Bad";
+    const { humidity } = data.main;
+
+    return humidity > 70 ? "Good" : humidity < 40 ? "Bad" : "Normal";
   }, [data]);
 
   if (error) {
     return (
       <S.Container>
-        <S.Header>
-          <div>
-            <S.LogoWrapper>
-              <Icon.FiCloud size={24} color="#333" />
-              <span>ClimaCast</span>
-            </S.LogoWrapper>
-
-            <S.SearchContainer>
-              <input
-                onChange={(e) => setInputValue(e.target.value)}
-                value={inputValue}
-              />
-
-              <button>
-                <Icon.FiSearch size={24} color="#333" />
-              </button>
-            </S.SearchContainer>
-          </div>
-        </S.Header>
+        <Header defaultInputValue={inputValue} onChangeInput={setInputValue} />
 
         <S.MainContent>
           <div>
@@ -99,25 +85,7 @@ const Home: React.FC = () => {
   if (isLoading || !parsedData) {
     return (
       <S.Container>
-        <S.Header>
-          <div>
-            <S.LogoWrapper>
-              <Icon.FiCloud size={24} color="#333" />
-              <span>ClimaCast</span>
-            </S.LogoWrapper>
-
-            <S.SearchContainer>
-              <input
-                onChange={(e) => setInputValue(e.target.value)}
-                value={inputValue}
-              />
-
-              <button>
-                <Icon.FiSearch size={24} color="#333" />
-              </button>
-            </S.SearchContainer>
-          </div>
-        </S.Header>
+        <Header defaultInputValue={inputValue} onChangeInput={setInputValue} />
 
         <S.MainContent>
           <Loader color="#333" size={84} />
@@ -128,80 +96,46 @@ const Home: React.FC = () => {
 
   return (
     <S.Container>
-      <S.Header>
-        <div>
-          <S.LogoWrapper>
-            <Icon.FiCloud size={24} color="#333" />
-            <span>ClimaCast</span>
-          </S.LogoWrapper>
-
-          <S.SearchContainer>
-            <input
-              onChange={(e) => setInputValue(e.target.value)}
-              value={inputValue}
-            />
-
-            <button>
-              <Icon.FiSearch size={24} color="#333" />
-            </button>
-          </S.SearchContainer>
-        </div>
-      </S.Header>
+      <Header defaultInputValue={inputValue} onChangeInput={setInputValue} />
 
       <S.MainContent>
-        {error ? (
-          <div>
-            <header>
-              <Icon.FiX size={84} color="#B00020" />
+        <div>
+          <header>
+            {weatherIcons[parsedData.weather[0].main as "Rain"] ? (
+              weatherIcons[parsedData.weather[0].main as "Rain"]
+            ) : (
+              <Icon.FiSun size={84} color="#333" />
+            )}
 
-              <S.ErrorMessage>
-                <h1>Oops!</h1>
-                <span>
-                  We did not find the city you are looking for. <br /> Check if
-                  it's miswritten and try again
-                </span>
-              </S.ErrorMessage>
-            </header>
-          </div>
-        ) : (
-          <div>
-            <header>
-              {weatherIcons[parsedData.weather[0].main as "Rain"] ? (
-                weatherIcons[parsedData.weather[0].main as "Rain"]
-              ) : (
-                <Icon.FiSun size={84} color="#333" />
-              )}
+            <div>
+              <h1>{parsedData.main.temp}°</h1>
 
-              <div>
-                <h1>{parsedData.main.temp}°</h1>
+              <span>{parsedData.name}</span>
+            </div>
+          </header>
 
-                <span>{parsedData.name}</span>
-              </div>
-            </header>
+          <main>
+            <div>
+              <strong>Wind</strong>
+              <span>{parsedData.wind.speed || "..."} km/h</span>
+            </div>
 
-            <main>
-              <div>
-                <strong>Wind</strong>
-                <span>{parsedData.wind.speed || "..."} km/h</span>
-              </div>
+            <div>
+              <strong>Humidity</strong>
+              <span>{parsedData.main.humidity || "..."}%</span>
+            </div>
 
-              <div>
-                <strong>Humidity</strong>
-                <span>{parsedData.main.humidity || "..."}%</span>
-              </div>
+            <div>
+              <strong>Air Quality</strong>
+              <span>{airQuality || "..."}</span>
+            </div>
 
-              <div>
-                <strong>Air Quality</strong>
-                <span>{airQuality || "..."}</span>
-              </div>
-
-              <div>
-                <strong>Weather</strong>
-                <span>{parsedData.weather[0].main || "..."}</span>
-              </div>
-            </main>
-          </div>
-        )}
+            <div>
+              <strong>Weather</strong>
+              <span>{parsedData.weather[0].main || "..."}</span>
+            </div>
+          </main>
+        </div>
       </S.MainContent>
     </S.Container>
   );

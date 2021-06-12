@@ -8,6 +8,9 @@ export default function useFetch<Data = any, Error = any>(url: string) {
       const response = await axios.get(url);
 
       return response.data;
+    },
+    {
+      revalidateOnFocus: false
     }
   );
 
