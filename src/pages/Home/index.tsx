@@ -4,6 +4,7 @@ import * as Icon from "react-icons/fi";
 
 import Header from "../../components/Header";
 import useFetch from "../../hooks/useFetch";
+import getMapValue from "../../utils/getMapValue";
 import * as S from "./styles";
 
 interface WeatherAPIResponse {
@@ -15,7 +16,7 @@ interface WeatherAPIResponse {
     main: "Thunderstorm" | "Drizzle" | "Rain" | "Snow" | "Clear" | "Clouds";
   }>;
   main: {
-    temp: number;
+    temp_max: number;
     feels_like: number;
     humidity: number;
   };
@@ -45,17 +46,25 @@ const Home: React.FC = () => {
       ...data,
       main: {
         ...data.main,
-        temp: Math.floor(data.main.temp)
+        temp_max: Math.floor(data.main.temp_max)
       }
-    } as WeatherAPIResponse;
+    };
   }, [data, error]);
 
   const airQuality = useMemo(() => {
-    if (!data) return "";
+    if (!data) {
+      return "...";
+    }
 
     const { humidity } = data.main;
 
-    return humidity > 70 ? "Good" : humidity < 40 ? "Bad" : "Normal";
+    if (humidity >= 70) {
+      return "Good";
+    } else if (humidity <= 40) {
+      return "Bad";
+    } else {
+      return "Normal";
+    }
   }, [data]);
 
   if (error) {
@@ -101,14 +110,12 @@ const Home: React.FC = () => {
       <S.MainContent>
         <div>
           <header>
-            {weatherIcons[parsedData.weather[0].main as "Rain"] ? (
-              weatherIcons[parsedData.weather[0].main as "Rain"]
-            ) : (
+            {getMapValue(weatherIcons, parsedData.weather[0].main) || (
               <Icon.FiSun size={84} color="#333" />
             )}
 
             <div>
-              <h1>{parsedData.main.temp}°</h1>
+              <h1>{parsedData.main.temp_max}°</h1>
 
               <span>{parsedData.name}</span>
             </div>
@@ -117,22 +124,22 @@ const Home: React.FC = () => {
           <main>
             <div>
               <strong>Wind</strong>
-              <span>{parsedData.wind.speed || "..."} km/h</span>
+              <span>{parsedData.wind.speed} km/h</span>
             </div>
 
             <div>
               <strong>Humidity</strong>
-              <span>{parsedData.main.humidity || "..."}%</span>
+              <span>{parsedData.main.humidity}%</span>
             </div>
 
             <div>
               <strong>Air Quality</strong>
-              <span>{airQuality || "..."}</span>
+              <span>{airQuality}</span>
             </div>
 
             <div>
               <strong>Weather</strong>
-              <span>{parsedData.weather[0].main || "..."}</span>
+              <span>{parsedData.weather[0].main}</span>
             </div>
           </main>
         </div>
