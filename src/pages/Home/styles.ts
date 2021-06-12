@@ -75,6 +75,22 @@ export const MainContent = styled.main`
       }
     }
   }
+
+  @media (max-width: 535px) {
+    > div {
+      > main {
+        display: grid;
+        grid-template-columns: repeat(2, 60px);
+        grid-auto-rows: 60px;
+        column-gap: 70px;
+        row-gap: 30px;
+
+        > div + div {
+          margin-left: 0;
+        }
+      }
+    }
+  }
 `;
 
 export const ErrorMessage = styled.div`

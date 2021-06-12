@@ -16,6 +16,12 @@ export const Header = styled.header`
     width: 100%;
     max-width: 1120px;
   }
+
+  @media (max-width: 360px) {
+    > div {
+      max-width: 288px;
+    }
+  }
 `;
 
 export const LogoWrapper = styled.div`
@@ -57,5 +63,14 @@ export const SearchContainer = styled.div`
     border: 0;
     background: transparent;
     cursor: pointer;
+  }
+
+  @media (max-width: 535px) {
+    width: 226px;
+    margin-left: 8px;
+  }
+
+  @media (max-width: 360px) {
+    width: 124px;
   }
 `;
