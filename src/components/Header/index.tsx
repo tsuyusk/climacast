@@ -8,7 +8,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({
-  defaultInputValue,
+  defaultInputValue = "",
   onChangeInput
 }) => {
   const [inputValue, setInputValue] = useState(defaultInputValue);

@@ -1,16 +1,17 @@
 import useSWR from "swr";
-import axios from "axios";
+import api from "../services/api";
 
 export default function useFetch<Data = any, Error = any>(url: string) {
   const { data, error, isValidating } = useSWR<Data, Error>(
-    `https://api.openweathermap.org/data/2.5/${url}&units=metric&appid=e874e11deb027e1d25bd2598ae20e169`,
+    `/${url}&units=metric&appid=e874e11deb027e1d25bd2598ae20e169`,
     async (url) => {
-      const response = await axios.get(url);
+      const response = await api.get(url);
 
       return response.data;
     },
     {
-      revalidateOnFocus: false
+      revalidateOnFocus: false,
+      shouldRetryOnError: false
     }
   );
 

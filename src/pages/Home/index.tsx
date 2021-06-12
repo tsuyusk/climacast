@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from "react";
-import Loader from "react-spinners/BounceLoader";
+import Loader from "react-spinners/MoonLoader";
 import * as Icon from "react-icons/fi";
 
 import Header from "../../components/Header";
 import useFetch from "../../hooks/useFetch";
-import getMapValue from "../../utils/getMapValue";
+import getObjectValue from "../../utils/getObjectValue";
 import * as S from "./styles";
 
 interface WeatherAPIResponse {
@@ -52,7 +52,7 @@ const Home: React.FC = () => {
   }, [data, error]);
 
   const airQuality = useMemo(() => {
-    if (!data) {
+    if (!data || error) {
       return "...";
     }
 
@@ -65,7 +65,7 @@ const Home: React.FC = () => {
     } else {
       return "Normal";
     }
-  }, [data]);
+  }, [data, error]);
 
   if (error) {
     return (
@@ -110,7 +110,7 @@ const Home: React.FC = () => {
       <S.MainContent>
         <div>
           <header>
-            {getMapValue(weatherIcons, parsedData.weather[0].main) || (
+            {getObjectValue(weatherIcons, parsedData.weather[0].main) || (
               <Icon.FiSun size={84} color="#333" />
             )}
 
