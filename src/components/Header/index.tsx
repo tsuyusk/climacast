@@ -27,8 +27,10 @@ const Header: React.FC<HeaderProps> = ({
     <S.Header>
       <div>
         <S.LogoWrapper>
-          <Icon.FiCloud size={24} color="#333" />
-          <span>ClimaCast</span>
+          <a href="https://ij24j.csb.app/">
+            <Icon.FiCloud size={24} color="#333" />
+            <span>ClimaCast</span>
+          </a>
         </S.LogoWrapper>
 
         <S.SearchContainer>
@@ -38,7 +40,7 @@ const Header: React.FC<HeaderProps> = ({
           />
 
           <button>
-            <Icon.FiSearch size={24} color="#333" />
+            <Icon.FiSearch size={24} />
           </button>
         </S.SearchContainer>
       </div>

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 export const Container = styled.div`
   width: 100%;
@@ -47,14 +47,26 @@ export const MainContent = styled.main`
         }
 
         > span {
+          position: relative;
+
           display: flex;
-          align-items: center;
+          align-items: flex-end;
+          width: 100%;
+
+          overflow: hidden;
+          transition: width 0.2s ease;
 
           font-weight: 500;
           font-size: 32px;
           line-height: 39px;
 
           margin-left: 26px;
+
+          > img {
+            width: 32px;
+            height: 32px;
+            margin-left: 8px;
+          }
         }
       }
     }
@@ -64,9 +76,17 @@ export const MainContent = styled.main`
       align-items: center;
 
       > div {
+        position: relative;
+
         display: flex;
         flex-direction: column;
         align-items: center;
+        transition: transform 0.3s ease;
+
+        &:hover,
+        &:focus {
+          transform: translateY(-24%);
+        }
 
         & + div {
           margin-left: 70px;
@@ -77,6 +97,14 @@ export const MainContent = styled.main`
 
   @media (max-width: 535px) {
     > div {
+      > header {
+        > div {
+          flex-direction: column;
+          align-items: center;
+          margin-bottom: 70px;
+        }
+      }
+
       > main {
         display: grid;
         grid-template-columns: repeat(2, 60px);

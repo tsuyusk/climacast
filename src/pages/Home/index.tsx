@@ -12,6 +12,9 @@ interface WeatherAPIResponse {
   wind: {
     speed: number;
   };
+  sys: {
+    country: string;
+  };
   weather: Array<{
     main: "Thunderstorm" | "Drizzle" | "Rain" | "Snow" | "Clear" | "Clouds";
   }>;
@@ -67,6 +70,16 @@ const Home: React.FC = () => {
     }
   }, [data, error]);
 
+  const flagUrl = useMemo(() => {
+    if (!data || error) {
+      return "";
+    }
+
+    const { country } = data.sys;
+
+    return `https://www.countryflags.io/${country.toLowerCase()}/flat/64.png`;
+  }, [data, error]);
+
   if (error) {
     return (
       <S.Container>
@@ -117,7 +130,10 @@ const Home: React.FC = () => {
             <div>
               <h1>{parsedData.main.temp_max}°</h1>
 
-              <span>{parsedData.name}</span>
+              <span>
+                {parsedData.name}
+                <img src={flagUrl} alt={`${parsedData.sys.country} Flag`} />
+              </span>
             </div>
           </header>
 
